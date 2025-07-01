@@ -45,6 +45,8 @@ public class Main {
         System.out.println("Подзадачи: " + managers.listOfSubtask());
 
         managers.getTask(task1.getId());
+        managers.getTask(task1.getId());
+        managers.getTask(task1.getId());
         managers.getTask(task2.getId());
         managers.getEpic(epic1.getId());
         managers.getEpic(epic2.getId());
