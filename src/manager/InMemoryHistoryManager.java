@@ -6,26 +6,13 @@ import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node> nodeMap = new HashMap<>();
+    private int size = 0;
     private Node head;
     private Node tail;
-    private int size = 0;
-
-    static class Node {
-        Task task;
-        Node next;
-        Node prev;
-
-        public Node(Task task, Node next, Node prev) {
-            this.task = task;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     @Override
     public void add(Task task) {
         if (task == null) return;
-        // Удаляем существующий узел с этим id, чтобы избежать дублирования
         remove(task.getId());
         linkedLast(task);
     }
@@ -33,7 +20,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private void linkedLast(Task task) {
         final Node newNode = new Node(task, null, tail);
         if (tail != null) {
-            tail.next = newNode;
+            tail.setNext(newNode);
         }
         tail = newNode;
 
@@ -53,18 +40,18 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         // Обновляем связи в списке
-        if (node.prev != null) {
-            node.prev.next = node.next;
+        if (node.getPrev() != null) {
+            node.getPrev().setNext(node.getNext());
         } else {
             // Удаляемый узел был головой
-            head = node.next;
+            head = node.getNext();
         }
 
-        if (node.next != null) {
-            node.next.prev = node.prev;
+        if (node.getNext() != null) {
+            node.getNext().setPrev(node.getPrev());
         } else {
             // Удаляемый узел был хвостом
-            tail = node.prev;
+            tail = node.getPrev();
         }
 
         size--;
@@ -75,8 +62,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         List<Task> result = new ArrayList<>();
         Node current = head;
         while (current != null) {
-            result.add(current.task);
-            current = current.next;
+            result.add(current.getTask());
+            current = current.getNext();
         }
         return result;
     }
